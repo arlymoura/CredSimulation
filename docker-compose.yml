@@ -43,6 +43,17 @@ services:
     env_file:
       - .env
 
+  test:
+    build: .
+    command: bundle exec rspec
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
   redis_data:
