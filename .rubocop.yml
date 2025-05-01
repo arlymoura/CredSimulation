@@ -8,6 +8,7 @@ plugins:
 AllCops:
   TargetRubyVersion: 3.3
   NewCops: enable
+  SuggestExtensions: false
   ActiveSupportExtensionsEnabled: true
   Exclude:
     - "bin/**/*"
@@ -20,6 +21,8 @@ AllCops:
     - 'spec/spec_helper.rb'
     - 'spec/support/**/*'
     - './Gemfile'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
 
 # Layout
 Layout/ArgumentAlignment:
