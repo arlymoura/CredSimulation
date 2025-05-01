@@ -1,8 +1,98 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-factory_bot
 
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+AllCops:
+  NewCops: enable
+  ActiveSupportExtensionsEnabled: true
+  Exclude:
+    - "bin/**/*"
+    - "db/**/*"
+    - "lib/**/*"
+    - "scripts/**/*"
+    - "swagger/**/*"
+
+# Layout
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+
+# Naming
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+# Style
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%i': '()'
+    '%w': '()'
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/SymbolProc:
+  AllowMethodsWithArguments: true
+Style/LambdaCall:
+  Enabled: false
+Style/RedundantConstantBase:
+  Enabled: false
+
+# RSpec
+RSpec/Rails/InferredSpecType:
+  Enabled: false
+RSpec/DescribeClass:
+  Enabled: false
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - "spec/integration/**/*"
+RSpec/ExpectInHook:
+  Exclude:
+    - "spec/integration/**/*"
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+RSpec/MultipleExpectations:
+  Max: 5
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/ScatteredSetup:
+  Exclude:
+    - "spec/integration/**/*"
+RSpec/StubbedMock:
+  Enabled: false
+RSpec/VariableName:
+  AllowedPatterns:
+    - Authorization
+RSpec/NestedGroups:
+  Max: 6
+RSpec/ExampleLength:
+  Max: 10
+RSpec/LetSetup:
+  Enabled: false
+RSpecRails/InferredSpecType:
+  Enabled: false
+
+# FactoryBot
+FactoryBot/ConsistentParenthesesStyle:
+  Enabled: false
+RSpec/FactoryBot/ConsistentParenthesesStyle:
+  Enabled: false
+
+# Lint
+Lint/MissingSuper:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "config/routes.rb"
+    - "config/routes/**/*"
