@@ -7,4 +7,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  scope path: 'api/v1' do
+    namespace :loans do
+      resources :simulations, only: [:create]
+    end
+  end
 end
