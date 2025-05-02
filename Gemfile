@@ -48,7 +48,7 @@ group :development, :test do
   gem 'ruby-lsp-rails'
   gem 'ruby-lsp-rspec', require: false
   gem 'solargraph'
-  gem "shoulda-matchers", "~> 5.0"
+  gem "shoulda-matchers", "~> 6.5"
   gem "brakeman", require: false
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
