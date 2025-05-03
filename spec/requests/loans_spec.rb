@@ -1,5 +1,6 @@
 # spec/requests/api/v1/loans_spec.rb
 require 'rails_helper'
+require 'swagger_helper'
 
 RSpec.describe 'Loans API', type: :request do
   describe 'POST /api/v1/loans/simulations' do
