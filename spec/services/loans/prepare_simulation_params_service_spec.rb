@@ -145,7 +145,7 @@ RSpec.describe Loans::PrepareSimulationParamsService, type: :service do
     end
 
     context 'when birth_date is string' do
-      let(:birth_date) { (30.years.ago.to_date).to_s }
+      let(:birth_date) { 30.years.ago.to_date.to_s }
 
       it 'returns success' do
         expect(service_response).to be_success

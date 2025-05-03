@@ -66,7 +66,7 @@ module Loans
       age
     end
 
-    def success_response(normalized_loan_amount_cents, normalized_birth_date, normalized_term ,age)
+    def success_response(normalized_loan_amount_cents, normalized_birth_date, normalized_term, age)
       success(
         loan_amount: @loan_amount,
         loan_amount_cents: normalized_loan_amount_cents,
