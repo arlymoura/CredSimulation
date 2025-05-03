@@ -49,12 +49,18 @@ Style/PercentLiteralDelimiters:
     '%i': '()'
     '%w': '()'
 Style/StringLiterals:
-  EnforcedStyle: double_quotes
+  EnforcedStyle: single_quotes
 Style/SymbolProc:
   AllowMethodsWithArguments: true
 Style/LambdaCall:
   Enabled: false
 Style/RedundantConstantBase:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 14
+
+Rails/StrongParametersExpect:
   Enabled: false
 
 # RSpec

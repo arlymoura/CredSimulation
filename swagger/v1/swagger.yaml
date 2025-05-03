@@ -1,0 +1,40 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/loans/simulations":
+    post:
+      summary: Simulate a loan
+      tags:
+      - Loans
+      parameters: []
+      responses:
+        '200':
+          description: successful
+        '422':
+          description: unprocessable entity - missing birth_date
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                loan_amount:
+                  type: integer
+                birth_date:
+                  type: string
+                  format: date
+                term_in_months:
+                  type: integer
+              example:
+                loan_amount: 10000
+                birth_date: '2005-06-08'
+                term_in_months: 24
+              required:
+              - loan_amount
+              - birth_date
+              - term_in_months
+servers:
+- url: http://localhost:3000
