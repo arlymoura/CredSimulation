@@ -1,6 +1,6 @@
 require 'swagger_helper'
 
-RSpec.describe 'Loans API', type: :request do
+RSpec.describe 'Loans API', type: :request do # rubocop:disable RSpec/EmptyExampleGroup
   path '/api/v1/loans/simulations' do
     post 'Simulate a loan' do
       tags 'Loans'
@@ -18,7 +18,7 @@ RSpec.describe 'Loans API', type: :request do
           birth_date: '2005-06-08',
           term_in_months: 24
         },
-        required: ['loan_amount', 'birth_date', 'term_in_months']
+        required: %w(loan_amount birth_date term_in_months)
       }
 
       response(200, 'successful') do
