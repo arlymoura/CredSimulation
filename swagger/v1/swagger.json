@@ -1,0 +1,74 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/loans/simulations":
+    post:
+      summary: Simulate a loan
+      tags:
+      - Loans
+      parameters: []
+      responses:
+        '200':
+          description: successful simulation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_per_month:
+                    type: number
+                    example: 438.71
+                  total_interest:
+                    type: number
+                    example: 529.04
+                  total_paid:
+                    type: number
+                    example: 10529.04
+                required:
+                - payment_per_month
+                - total_interest
+                - total_paid
+        '422':
+          description: invalid loan amount
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid loan amount
+                required:
+                - error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                loan_amount:
+                  type: number
+                  example: 10000
+                birth_date:
+                  type: string
+                  format: date
+                  example: '2005-06-08'
+                term_in_months:
+                  type: integer
+                  example: 24
+              required:
+              - loan_amount
+              - birth_date
+              - term_in_months
+servers:
+- url: https://{localhost}
+  variables:
+    defaultHost:
+      default: localhost:3000
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
