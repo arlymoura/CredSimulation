@@ -56,7 +56,7 @@ group :development, :test do
   gem 'rubocop-factory_bot', require: false
   gem 'rubocop-rspec_rails', require: false
   gem "rubocop-rails-omakase", require: false
-
+  gem 'rswag-specs'
 end
 
 group :development do
@@ -76,3 +76,4 @@ end
 
 gem 'sidekiq'
 gem 'sidekiq-cron', require: 'sidekiq/cron/job'
+gem 'rswag'
