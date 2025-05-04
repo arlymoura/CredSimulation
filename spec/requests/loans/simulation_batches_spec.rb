@@ -100,7 +100,7 @@ RSpec.describe 'API V1 Loans Simulation Batches', type: :request do # rubocop:di
 
           # rubocop:disable RSpec/AnyInstance
           # rubocop:disable RSpec/MessageChain
-          allow_any_instance_of(SimulationBatch).to receive_message_chain(:simulations, :pluck).and_return(
+          allow_any_instance_of(SimulationBatch).to receive_message_chain(:simulations, :map).and_return(
             [
               [
                 {

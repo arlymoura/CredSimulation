@@ -29,8 +29,14 @@ module Loans
     def wait_for_completion
       sleep(1) until batch_model.reload.completed?
       success(
-        batch_model.simulations.pluck(:id, :result, :simulation_batch_id).map do |sim_id, result, sim_batch_id|
-          result.merge!(simulation_id: sim_id, simulation_batch_id: sim_batch_id)
+        batch_model.simulations.map do |simulation|
+          simulation.result.merge!(
+            simulation_id: simulation.id,
+            simulation_batch_id: simulation.simulation_batch_id,
+            loan_amount: simulation.loan_amount,
+            term_in_months: simulation.term_in_months,
+            birth_date: simulation.birth_date
+          )
         end
       )
     end
