@@ -215,25 +215,22 @@ docker compose run --rm test
 
 **Exemplo de Retorno:**
 ```json
-{
-  "success": true,
-  "data": [
-    {
-      "payment_per_month": 900,
-      "total_paid": 10800,
-      "total_interest": 800,
-      "annual_interest_rate": 5.5,
-      "simulation_id": 1,
-      "simulation_batch_id": 123
-    },
-    {
-      "payment_per_month": 950,
-      "total_paid": 22800,
-      "total_interest": 2800,
-      "annual_interest_rate": 6.0,
-      "simulation_id": 2,
-      "simulation_batch_id": 123
-    }
-  ]
-}
+[
+  {
+    "payment_per_month": 900,
+    "total_paid": 10800,
+    "total_interest": 800,
+    "annual_interest_rate": 5.5,
+    "simulation_id": 1,
+    "simulation_batch_id": 123
+  },
+  {
+    "payment_per_month": 950,
+    "total_paid": 22800,
+    "total_interest": 2800,
+    "annual_interest_rate": 6.0,
+    "simulation_id": 2,
+    "simulation_batch_id": 123
+  }
+]
 ```
