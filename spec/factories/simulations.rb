@@ -10,14 +10,12 @@ FactoryBot.define do
     trait :with_result do
       result do
         {
-          total_paid: 10272.84,
+          total_paid: 10_272.84,
           total_interest: 272.84,
           payment_per_month: 856.07,
-          annual_interest_rate: 5.0,
+          annual_interest_rate: 5.0
         }
       end
     end
   end
-
-
 end
