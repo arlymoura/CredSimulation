@@ -23,7 +23,7 @@ module Loans
         attachments["simulation_batch_#{@batch.id}.csv"] = generate_csv(@simulations)
         mail(
           to: @batch.email,
-          subject: 'Your simulation batch is complete', # rubocop:disable Rails/I18nLocaleTexts
+          subject: 'Your simulation batch is complete' # rubocop:disable Rails/I18nLocaleTexts
         )
       end
 
