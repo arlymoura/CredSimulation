@@ -14,11 +14,14 @@ Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 # include Warden::Test::Helpers
 # Warden.test_mode!
 
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  abort e.to_s.strip
+unless Rails.env.development?
+  begin
+    ActiveRecord::Migration.maintain_test_schema!
+  rescue ActiveRecord::PendingMigrationError => e
+    abort e.to_s.strip
+  end
 end
+
 RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.fixture_paths = [File.join(::Rails.root, 'test', 'fixtures')]
@@ -37,6 +40,12 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
+  end
+end
+
+RSpec.configure do |config|
+  config.before(:each) do
+    ActiveJob::Base.queue_adapter = :test
   end
 end
 
