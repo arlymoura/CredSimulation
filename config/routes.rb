@@ -1,3 +1,6 @@
+require "sidekiq/web"
+# require "sidekiq/cron/web"
+
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
@@ -10,9 +13,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   scope path: 'api/v1' do
     namespace :loans do
       resources :simulations, only: [:create]
+      resources :simulation_batches, only: [:create]
     end
   end
 end
