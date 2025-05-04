@@ -52,7 +52,7 @@ paths:
                         - term_in_months
                   example:
                     email: user@example.com
-                    sync: true
+                    sync: false
                     simulations_data:
                     - loan_amount: 10000
                       birth_date: '2005-06-08'

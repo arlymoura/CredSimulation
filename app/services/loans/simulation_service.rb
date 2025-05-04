@@ -74,7 +74,7 @@ module Loans
       return unless @simulation_batch_id
 
       batch = create_simulation_service.data[:simulation].simulation_batch
-      return unless batch.total_count == batch.simulations.where(status: :completed).count
+      return unless batch.total_count == batch.simulations.where.not(status: :pending).count
 
       batch.update!(status: :completed)
       return if batch.email.blank?
