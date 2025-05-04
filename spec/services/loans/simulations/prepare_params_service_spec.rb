@@ -1,7 +1,7 @@
 # spec/services/loans/prepare_simulation_params_service_spec.rb
 require 'rails_helper'
 
-RSpec.describe Loans::PrepareSimulationParamsService, type: :service do
+RSpec.describe Loans::Simulations::PrepareParamsService, type: :service do
   let(:service_response) { described_class.call(**params) }
   let(:loan_amount) { 10_000.0 }
   let(:term_in_months) { 24 }

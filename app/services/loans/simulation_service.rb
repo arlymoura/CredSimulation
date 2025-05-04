@@ -1,69 +1,87 @@
 module Loans
   class SimulationService < ::ApplicationService
-    def initialize(loan_amount:, birth_date:, term_in_months:)
+    def initialize(loan_amount:, birth_date:, term_in_months:, simulation_batch_id: nil)
       @loan_amount = loan_amount
       @birth_date = birth_date
       @term_in_months = term_in_months
+      @simulation_batch_id = simulation_batch_id
     end
 
     def call
-      prepare_params_response = prepare_params
+      prepare_params_response = prepare_params_service
       return prepare_params_response if prepare_params_response.failure?
 
-      pmt_cents = calculate_pmt
-      total_paid_cents = pmt_cents * @term_in_months
-      total_interest_cents = total_paid_cents - loan_amount_cents
+      calculation_response = calculation_service
+      return calculation_response if calculation_response.failure?
 
-      success(
-        payment_per_month: cents_to_reais(pmt_cents),
-        total_paid: cents_to_reais(total_paid_cents),
-        total_interest: cents_to_reais(total_interest_cents),
-        annual_interest_rate: ((monthly_rate * 12) * 100).round(2)
-      )
+      create_response = create_simulation_service
+      return create_response if create_response.failure?
+
+      update_simulation_batch
+      success_response
     end
-
-    attr_reader :loan_amount, :birth_date, :term_in_months
 
     private
 
-    def prepare_params
-      @prepare_params ||= ::Loans::PrepareSimulationParamsService.call(
+    def prepare_params_service
+      @prepare_params_service ||= ::Loans::Simulations::PrepareParamsService.call(
         loan_amount: @loan_amount,
         birth_date: @birth_date,
         term_in_months: @term_in_months
       )
     end
 
-    def loan_amount_cents
-      prepare_params.data[:loan_amount_cents]
+    def calculation_service
+      @calculation_service ||= ::Loans::Simulations::CalculateService.call(
+        loan_amount_cents: prepare_params_service.data[:loan_amount_cents],
+        age: prepare_params_service.data[:age],
+        term_in_months: @term_in_months
+      )
     end
 
-    def birth_date_age
-      prepare_params.data[:age]
+    def create_simulation_service
+      @create_simulation_service ||= ::Loans::Simulations::CreateService.call(
+        params: {
+          loan_amount: @loan_amount,
+          birth_date: @birth_date,
+          term_in_months: @term_in_months
+        },
+        result: {
+          payment_per_month: cents_to_reais(calculation_service.data[:payment_per_month]),
+          total_paid: cents_to_reais(calculation_service.data[:total_paid]),
+          total_interest: cents_to_reais(calculation_service.data[:total_interest]),
+          annual_interest_rate: calculation_service.data[:annual_interest_rate]
+        },
+        simulation_batch_id: @simulation_batch_id
+      )
+    end
+
+    def success_response # rubocop:disable Metrics/AbcSize
+      success(
+        payment_per_month: cents_to_reais(calculation_service.data[:payment_per_month]),
+        total_paid: cents_to_reais(calculation_service.data[:total_paid]),
+        total_interest: cents_to_reais(calculation_service.data[:total_interest]),
+        annual_interest_rate: calculation_service.data[:annual_interest_rate],
+        simulation_id: create_simulation_service.data[:simulation].id
+      )
     end
 
     def cents_to_reais(cents)
       (cents.to_f / 100).round(2)
     end
 
-    def determine_rate_by_age
-      case birth_date_age
-      when 0..25 then 0.05
-      when 26..40 then 0.03
-      when 41..60 then 0.02
-      else 0.04
-      end
-    end
+    def update_simulation_batch
+      return unless @simulation_batch_id
 
-    def monthly_rate
-      annual_interest_rate = determine_rate_by_age
-      annual_interest_rate / 12.0
-    end
+      batch = create_simulation_service.data[:simulation].simulation_batch
+      return unless batch.total_count == batch.simulations.where.not(status: :pending).count
 
-    def calculate_pmt
-      numerator = loan_amount_cents * monthly_rate
-      denominator = 1 - ((1 + monthly_rate)**-term_in_months)
-      (numerator / denominator).round(0).to_i
+      batch.update!(status: :completed)
+      return if batch.email.blank?
+
+      Loans::Simulations::BatchMailer
+        .with(batch: batch)
+        .send_results.deliver_later(queue: 'mailers', retry: false)
     end
   end
 end

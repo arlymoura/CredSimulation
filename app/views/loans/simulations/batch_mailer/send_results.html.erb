@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <title>Simulation Batch Completed</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+      }
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .header {
+        background-color: #4CAF50;
+        padding: 20px;
+        color: white;
+        text-align: center;
+      }
+      .content {
+        padding: 20px;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 20px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>✅ Your Simulation Batch is Complete!</h1>
+      </div>
+
+      <div class="content">
+        <p>Hello,</p>
+
+        <p>
+          We are pleased to inform you that your batch of credit simulations has been successfully processed.
+        </p>
+
+        <p><strong>Batch details:</strong></p>
+        <ul>
+          <li><strong>Batch ID:</strong> <%= @batch.id %></li>
+          <li><strong>Total Simulations:</strong> <%= @batch.total_count %></li>
+          <li><strong>Processed at:</strong> <%= @batch.updated_at.strftime("%B %d, %Y at %H:%M %Z") %></li>
+        </ul>
+
+        <%# Optional: add a link to your platform if you have one %>
+        <% if Rails.application.routes.url_helpers.respond_to?(:simulation_batch_url) %>
+          <p>
+            You can view the full results by clicking the button below:
+          </p>
+          <p style="text-align: center;">
+            <a href="<%= simulation_batch_url(@batch) %>" class="btn">View Results</a>
+          </p>
+        <% end %>
+
+        <p>Thank you for using our credit simulation service.</p>
+      </div>
+
+      <div class="footer">
+        &copy; <%= Date.today.year %> Your Company. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

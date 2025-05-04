@@ -160,3 +160,77 @@ docker compose run --rm test
   "annual_interest_rate": 5.0
 }
 ```
+--
+
+## 📬 Endpoint: Criar um Lote de Simulações
+**URL:** `/api/v1/loans/simulation_batches`
+**Método:** `POST`
+
+### 🔐 Headers necessários
+
+- `Content-Type: application/json`
+
+---
+
+### 📥 Request Body
+
+| Campo           | Tipo    | Obrigatório | Descrição                              |
+|-----------------|---------|-------------|----------------------------------------|
+| email           | String  | Não         | Email para o qual os resultados do lote|
+|                 |         |             | serão enviados em formato CSV após o   |
+|                 |         |             |  Processamento                         |
+| sync            | Bollean | Não         | Se true, a API espera o processamento  |
+|                 |         |             | completo e retorna os   resultados na  |
+|                 |         |             | resposta. Se false (ou não informado), |
+|                 |         |             | processa de forma assíncrona.          |
+|simulations_data |Array    |Sim          | Lista de simulações a serem processadas|
+|                 |         |             |  Cada item contém os camposbaixo       |
+| loan_amount     | Number  | Sim         | Valor do empréstimo.                   |
+| loan_amount     | Number  | Sim         | Valor do empréstimo.                   |
+| term_in_months  | Integer | Sim         | Número de parcelas.                    |
+| birth_date      | String  | Sim         | Data de nascimento                     |
+
+**Exemplo de request:**
+
+```json
+{
+  "simulation_batch": {
+    "email": "user@example.com",
+    "sync": true,
+    "simulations_data": [
+      {
+        "loan_amount": 10000,
+        "birth_date": "2005-06-08",
+        "term_in_months": 12
+      },
+      {
+        "loan_amount": 10000,
+        "birth_date": "2005-06-08",
+        "term_in_months": 24
+      }
+    ]
+  }
+}
+```
+
+**Exemplo de Retorno:**
+```json
+[
+  {
+    "payment_per_month": 900,
+    "total_paid": 10800,
+    "total_interest": 800,
+    "annual_interest_rate": 5.5,
+    "simulation_id": 1,
+    "simulation_batch_id": 123
+  },
+  {
+    "payment_per_month": 950,
+    "total_paid": 22800,
+    "total_interest": 2800,
+    "annual_interest_rate": 6.0,
+    "simulation_id": 2,
+    "simulation_batch_id": 123
+  }
+]
+```
