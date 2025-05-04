@@ -1,10 +1,10 @@
 module Loans
   module Simulations
     class CreateService < ::ApplicationService
-      def initialize(params:, result:, simulation_batch: nil)
+      def initialize(params:, result:, simulation_batch_id: nil)
         @params = params
         @result = result
-        @simulation_batch = simulation_batch
+        @simulation_batch_id = simulation_batch_id
       end
 
       def call
@@ -19,7 +19,7 @@ module Loans
             total_interest: @result[:total_interest],
             annual_interest_rate: @result[:annual_interest_rate]
           },
-          simulation_batch: @simulation_batch
+          simulation_batch_id: @simulation_batch_id
         )
 
         success(simulation: simulation)
