@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Loans::SimulationService, type: :service do
   let(:service_response) { described_class.call(**params) }
+  let(:simulation_batch) { create(:simulation_batch) }
   let(:params) { {} }
 
   describe '#call' do
@@ -12,7 +13,8 @@ RSpec.describe Loans::SimulationService, type: :service do
       {
         loan_amount: loan_amount,
         birth_date: birth_date,
-        term_in_months: term_in_months
+        term_in_months: term_in_months,
+        simulation_batch_id: simulation_batch.id
       }
     end
 
@@ -43,6 +45,7 @@ RSpec.describe Loans::SimulationService, type: :service do
 
       context 'when the client turns 25 today' do
         let(:birth_date) { 25.years.ago.to_date + 1.day }
+        let(:simulation_batch) { create(:simulation_batch, total_count: 10) }
 
         it 'returns success' do
           expect(service_response).to be_success
@@ -55,6 +58,7 @@ RSpec.describe Loans::SimulationService, type: :service do
 
       context 'when client is between 26 and 40 years old' do
         let(:birth_date) { 30.years.ago.to_date }
+        let(:simulation_batch) { create(:simulation_batch, email: nil) }
 
         it 'returns success' do
           expect(service_response).to be_success
