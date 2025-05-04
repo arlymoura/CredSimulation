@@ -1,10 +1,11 @@
 module Loans
   module Simulations
     class CreateService < ::ApplicationService
-      def initialize(params:, result:, simulation_batch_id: nil)
+      def initialize(params:, result: {}, status: :pending, simulation_batch_id: nil)
         @params = params
         @result = result
         @simulation_batch_id = simulation_batch_id
+        @status = status
       end
 
       def call
@@ -12,13 +13,8 @@ module Loans
           loan_amount: @params[:loan_amount],
           term_in_months: @params[:term_in_months],
           birth_date: @params[:birth_date],
-          status: :completed,
-          result: {
-            payment_per_month: @result[:payment_per_month],
-            total_paid: @result[:total_paid],
-            total_interest: @result[:total_interest],
-            annual_interest_rate: @result[:annual_interest_rate]
-          },
+          status: @status,
+          result: @result,
           simulation_batch_id: @simulation_batch_id
         )
 

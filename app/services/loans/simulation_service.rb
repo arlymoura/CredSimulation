@@ -8,15 +8,14 @@ module Loans
     end
 
     def call
+      create_simulation_service
       prepare_params_response = prepare_params_service
-      return prepare_params_response if prepare_params_response.failure?
+      return handle_error_prepare_params_response(prepare_params_response) if prepare_params_response.failure?
 
       calculation_response = calculation_service
       return calculation_response if calculation_response.failure?
 
-      create_response = create_simulation_service
-      return create_response if create_response.failure?
-
+      update_simulation
       update_simulation_batch
       success_response
     end
@@ -29,6 +28,14 @@ module Loans
         birth_date: @birth_date,
         term_in_months: @term_in_months
       )
+    end
+
+    def handle_error_prepare_params_response(response)
+      simulation = create_simulation_service.data[:simulation]
+      simulation.update!(status: :failed, result: { error: response.data })
+      update_simulation_batch
+
+      response
     end
 
     def calculation_service
@@ -46,13 +53,22 @@ module Loans
           birth_date: @birth_date,
           term_in_months: @term_in_months
         },
+        result: {},
+        status: :pending,
+        simulation_batch_id: @simulation_batch_id
+      )
+    end
+
+    def update_simulation # rubocop:disable Metrics/AbcSize
+      simulation = create_simulation_service.data[:simulation]
+      simulation.update!(
+        status: :completed,
         result: {
           payment_per_month: cents_to_reais(calculation_service.data[:payment_per_month]),
           total_paid: cents_to_reais(calculation_service.data[:total_paid]),
           total_interest: cents_to_reais(calculation_service.data[:total_interest]),
           annual_interest_rate: calculation_service.data[:annual_interest_rate]
-        },
-        simulation_batch_id: @simulation_batch_id
+        }
       )
     end
 
