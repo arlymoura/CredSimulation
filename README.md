@@ -234,3 +234,9 @@ docker compose run --rm test
   }
 ]
 ```
+---
+
+## 📬 Endpoint: Documentação
+**URL:** `/api-docs`
+
+Basta subir aplicação e acessar no navegador
