@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   scope path: 'api/v1' do
     namespace :loans do
       resources :simulations, only: [:create]
